@@ -44,7 +44,8 @@ class ValidateResponseAspectTest {
         Mockito.doReturn(sourceSchema)
                 .when(aspect).loadSchema(Mockito.any());
 
-        aspect.handle(sourceJoinPoint, sourceConfig);
+        Assertions.assertDoesNotThrow(
+                () -> aspect.handle(sourceJoinPoint, sourceConfig));
     }
 
     @Test

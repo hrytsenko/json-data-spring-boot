@@ -36,7 +36,8 @@ class WrapErrorsAspectTest {
         ProceedingJoinPoint sourceJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
         WrapErrors sourceConfig = Mockito.mock(WrapErrors.class);
 
-        aspect.handle(sourceJoinPoint, sourceConfig);
+        Assertions.assertDoesNotThrow(
+                () -> aspect.handle(sourceJoinPoint, sourceConfig));
     }
 
     @Test

@@ -30,10 +30,9 @@ class WrapErrorsAspect {
     public Object handle(ProceedingJoinPoint point, WrapErrors config) {
         try {
             return point.proceed();
+        } catch (ServiceException exception) {
+            throw exception;
         } catch (Exception exception) {
-            if (exception instanceof ServiceException) {
-                throw exception;
-            }
             throw new ServiceException.InternalServer(config.value(), exception);
         }
     }
