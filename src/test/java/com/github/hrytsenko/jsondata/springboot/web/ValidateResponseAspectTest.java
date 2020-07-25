@@ -17,6 +17,7 @@ package com.github.hrytsenko.jsondata.springboot.web;
 
 import com.github.hrytsenko.jsondata.JsonBean;
 import com.github.hrytsenko.jsondata.JsonParser;
+import com.github.hrytsenko.jsondata.JsonValidator;
 import lombok.SneakyThrows;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Assertions;
@@ -26,23 +27,26 @@ import org.mockito.Mockito;
 
 class ValidateResponseAspectTest {
 
+    ValidatorSource validatorSource;
     ValidateResponseAspect aspect;
 
     @BeforeEach
     void init() {
-        aspect = Mockito.spy(new ValidateResponseAspect());
+        validatorSource = Mockito.mock(ValidatorSource.class);
+        aspect = new ValidateResponseAspect(validatorSource);
     }
 
     @Test
     void validate_success() {
-        String sourceSchema = "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}";
+        JsonValidator sourceValidator = JsonValidator.create(
+                "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}");
         JsonBean sourceResponse = JsonParser.stringToEntity("{'foo':'FOO'}", JsonBean::create);
 
         ProceedingJoinPoint sourceJoinPoint = mockJoinPoint(sourceResponse);
         ValidateResponse sourceConfig = Mockito.mock(ValidateResponse.class);
 
-        Mockito.doReturn(sourceSchema)
-                .when(aspect).loadSchema(Mockito.any());
+        Mockito.doReturn(sourceValidator)
+                .when(validatorSource).getValidator(Mockito.any());
 
         Assertions.assertDoesNotThrow(
                 () -> aspect.handle(sourceJoinPoint, sourceConfig));
@@ -50,14 +54,15 @@ class ValidateResponseAspectTest {
 
     @Test
     void validate_failure() {
-        String sourceSchema = "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}";
+        JsonValidator sourceValidator = JsonValidator.create(
+                "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}");
         JsonBean sourceResponse = JsonParser.stringToEntity("{'foo':'BAR'}", JsonBean::create);
 
         ProceedingJoinPoint sourcePoint = mockJoinPoint(sourceResponse);
         ValidateResponse sourceConfig = Mockito.mock(ValidateResponse.class);
 
-        Mockito.doReturn(sourceSchema)
-                .when(aspect).loadSchema(Mockito.any());
+        Mockito.doReturn(sourceValidator)
+                .when(validatorSource).getValidator(Mockito.any());
 
         Assertions.assertThrows(ValidateResponseException.class,
                 () -> aspect.handle(sourcePoint, sourceConfig));

@@ -81,6 +81,8 @@ Use `WrapErrors` to wrap all exceptions in `ServiceException.InternalError` with
 
 Provide `CorrelationSource` to enable correlations for error responses.
 
+Provide `ValidatorSource` to configure a resource manager for validators.
+
 [json-data]: https://github.com/hrytsenko/json-data 
 [Spring Boot]: https://spring.io/projects/spring-boot
 [Spring Cloud OpenFeign]: https://spring.io/projects/spring-cloud-openfeign

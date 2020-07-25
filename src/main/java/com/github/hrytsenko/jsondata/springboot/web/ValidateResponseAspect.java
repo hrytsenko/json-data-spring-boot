@@ -16,9 +16,8 @@
 package com.github.hrytsenko.jsondata.springboot.web;
 
 import com.github.hrytsenko.jsondata.JsonEntity;
-import com.github.hrytsenko.jsondata.JsonResources;
-import com.github.hrytsenko.jsondata.JsonValidator;
 import com.github.hrytsenko.jsondata.JsonValidatorException;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -29,26 +28,24 @@ import org.springframework.core.annotation.Order;
 @Aspect
 @Order(0)
 @Configuration
+@AllArgsConstructor
 class ValidateResponseAspect {
+
+    ValidatorSource validatorSource;
 
     @Around("@annotation(config)")
     @SneakyThrows
     public Object handle(ProceedingJoinPoint point, ValidateResponse config) {
         JsonEntity<?> target = (JsonEntity<?>) point.proceed();
 
-        String resourceName = config.value();
+        String schemaName = config.value();
         try {
-            JsonValidator.create(loadSchema(resourceName))
+            validatorSource.getValidator(config.value())
                     .validate(target);
         } catch (JsonValidatorException exception) {
-            throw new ValidateResponseException("Invalid response " + resourceName, exception);
+            throw new ValidateResponseException("Invalid response " + schemaName, exception);
         }
 
         return target;
     }
-
-    String loadSchema(String resourceName) {
-        return JsonResources.readResource(resourceName);
-    }
-
 }

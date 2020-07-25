@@ -16,6 +16,7 @@
 package com.github.hrytsenko.jsondata.springboot;
 
 import com.github.hrytsenko.jsondata.springboot.error.CorrelationSource;
+import com.github.hrytsenko.jsondata.springboot.web.ValidatorSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +29,14 @@ class AutoConfigurationTest {
         String actualCorrelation = correlationSource.getCorrelation();
 
         Assertions.assertEquals("UNDEFINED", actualCorrelation);
+    }
+
+    @Test
+    void validatorSource_default() {
+        ValidatorSource validatorSource = new AutoConfiguration().defaultValidatorSource();
+
+        Assertions.assertDoesNotThrow(
+                () -> validatorSource.getValidator("empty-schema.json"));
     }
 
 }

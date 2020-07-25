@@ -17,6 +17,7 @@ package com.github.hrytsenko.jsondata.springboot.web;
 
 import com.github.hrytsenko.jsondata.JsonBean;
 import com.github.hrytsenko.jsondata.JsonParser;
+import com.github.hrytsenko.jsondata.JsonValidator;
 import org.aspectj.lang.JoinPoint;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,23 +26,26 @@ import org.mockito.Mockito;
 
 class ValidateRequestAspectTest {
 
+    ValidatorSource validatorSource;
     ValidateRequestAspect aspect;
 
     @BeforeEach
     void init() {
-        aspect = Mockito.spy(new ValidateRequestAspect());
+        validatorSource = Mockito.mock(ValidatorSource.class);
+        aspect = new ValidateRequestAspect(validatorSource);
     }
 
     @Test
     void validate_success() {
-        String sourceSchema = "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}";
+        JsonValidator sourceValidator = JsonValidator.create(
+                "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}");
         JsonBean sourceRequest = JsonParser.stringToEntity("{'foo':'FOO'}", JsonBean::create);
 
         JoinPoint sourceJoinPoint = mockJoinPoint(sourceRequest);
         ValidateRequest sourceConfig = Mockito.mock(ValidateRequest.class);
 
-        Mockito.doReturn(sourceSchema)
-                .when(aspect).loadSchema(Mockito.any());
+        Mockito.doReturn(sourceValidator)
+                .when(validatorSource).getValidator(Mockito.any());
 
         Assertions.assertDoesNotThrow(
                 () -> aspect.handle(sourceJoinPoint, sourceConfig));
@@ -49,14 +53,15 @@ class ValidateRequestAspectTest {
 
     @Test
     void validate_failure() {
-        String sourceSchema = "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}";
+        JsonValidator sourceValidator = JsonValidator.create(
+                "{\"properties\":{\"foo\":{\"enum\":[\"FOO\"]}},\"required\":[\"foo\"]}");
         JsonBean sourceRequest = JsonParser.stringToEntity("{'foo':'BAR'}", JsonBean::create);
 
         JoinPoint sourcePoint = mockJoinPoint(sourceRequest);
         ValidateRequest sourceConfig = Mockito.mock(ValidateRequest.class);
 
-        Mockito.doReturn(sourceSchema)
-                .when(aspect).loadSchema(Mockito.any());
+        Mockito.doReturn(sourceValidator)
+                .when(validatorSource).getValidator(Mockito.any());
 
         Assertions.assertThrows(ValidateRequestException.class,
                 () -> aspect.handle(sourcePoint, sourceConfig));

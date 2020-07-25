@@ -15,7 +15,10 @@
  */
 package com.github.hrytsenko.jsondata.springboot;
 
+import com.github.hrytsenko.jsondata.JsonResources;
+import com.github.hrytsenko.jsondata.JsonValidator;
 import com.github.hrytsenko.jsondata.springboot.error.CorrelationSource;
+import com.github.hrytsenko.jsondata.springboot.web.ValidatorSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +35,16 @@ class AutoConfiguration {
     public CorrelationSource undefinedCorrelationSource() {
         log.warn("Correlation source is missing");
         return () -> "UNDEFINED";
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ValidatorSource defaultValidatorSource() {
+        log.info("Use default validator source");
+        return resourceName -> {
+            String schema = JsonResources.readResource(resourceName);
+            return JsonValidator.create(schema);
+        };
     }
 
 }
