@@ -3,7 +3,7 @@
 
 # Summary
 
-This library enables use of [json-data] with [Spring Boot]. It enables serialization, validation and error handling for HTTP requests and responses that use JSON entities.
+This library enables [json-data] for [Spring Boot] including serialization, validation and error handling for HTTP requests and responses that use JSON entities.
 
 # Example
 
@@ -70,6 +70,16 @@ class Application {
 
 }
 ```
+
+# Usage
+
+Use JSON entities with Spring Web and Spring Feign.
+
+Use `ValidateRequest` to validate a JSON entity (the first argument) via JSON Schema. Use `ValidateResponse` to validate a JSON entity (the return value) via JSON Schema.
+
+Use `WrapErrors` to wrap all exceptions in `ServiceException.InternalError` with a given error code, except those that are `ServiceException`.
+
+Provide `CorrelationSource` to enable correlations for error responses.
 
 [json-data]: https://github.com/hrytsenko/json-data 
 [Spring Boot]: https://spring.io/projects/spring-boot
