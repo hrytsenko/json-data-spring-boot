@@ -33,7 +33,7 @@ class WrapErrorsAspect {
         } catch (ServiceException exception) {
             throw exception;
         } catch (Exception exception) {
-            throw new ServiceException.InternalServer(config.value(), exception);
+            throw new ServiceException.InternalError(config.value(), exception);
         }
     }
 

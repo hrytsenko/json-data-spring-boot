@@ -91,9 +91,9 @@ class ExceptionAdvices {
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
-        @ExceptionHandler(ServiceException.InternalServer.class)
+        @ExceptionHandler(ServiceException.InternalError.class)
         @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-        public ErrorResponse onInternalError(ServiceException.InternalServer exception) {
+        public ErrorResponse onInternalError(ServiceException.InternalError exception) {
             log.error("Internal error", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }

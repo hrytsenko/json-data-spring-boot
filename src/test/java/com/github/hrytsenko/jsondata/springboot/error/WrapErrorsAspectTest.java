@@ -47,7 +47,7 @@ class WrapErrorsAspectTest {
         ProceedingJoinPoint sourceJoinPoint = mockJoinPoint(sourceException);
         WrapErrors sourceConfig = Mockito.mock(WrapErrors.class);
 
-        Assertions.assertThrows(ServiceException.InternalServer.class,
+        Assertions.assertThrows(ServiceException.InternalError.class,
                 () -> aspect.handle(sourceJoinPoint, sourceConfig));
     }
 

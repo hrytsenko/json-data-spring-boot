@@ -100,7 +100,7 @@ class ExceptionAdvicesTest {
     void serviceExceptionAdvice_onInternalError() {
         ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
 
-        ServiceException.InternalServer sourceException = new ServiceException.InternalServer("INTERNAL_ERROR");
+        ServiceException.InternalError sourceException = new ServiceException.InternalError("INTERNAL_ERROR");
 
         ExceptionAdvices.ErrorResponse actualResponse = advice.onInternalError(sourceException);
 

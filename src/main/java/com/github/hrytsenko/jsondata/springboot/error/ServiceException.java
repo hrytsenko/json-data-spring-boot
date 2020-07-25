@@ -81,13 +81,13 @@ public class ServiceException extends RuntimeException {
 
     }
 
-    public static class InternalServer extends ServiceException {
+    public static class InternalError extends ServiceException {
 
-        public InternalServer(String code) {
+        public InternalError(String code) {
             super(code);
         }
 
-        public InternalServer(String code, Throwable cause) {
+        public InternalError(String code, Throwable cause) {
             super(code, cause);
         }
 
