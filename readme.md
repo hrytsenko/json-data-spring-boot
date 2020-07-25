@@ -9,8 +9,8 @@ This library enables [json-data] for [Spring Boot] including serialization, vali
 
 The following example illustrates:
 * Use of JSON entities with [Spring Boot].
-* Use of JSON entities with [Spring Cloud OpenFeign].
-* Use of JSON errors with [Spring Boot] and [Spring Cloud Sleuth].
+* Use of JSON entities with [Spring Feign].
+* Use of JSON errors with [Spring Boot] and [Spring Sleuth].
 
 ```java
 @EnableFeignClients
@@ -85,5 +85,5 @@ Provide `ValidatorSource` to configure a resource manager for validators.
 
 [json-data]: https://github.com/hrytsenko/json-data 
 [Spring Boot]: https://spring.io/projects/spring-boot
-[Spring Cloud OpenFeign]: https://spring.io/projects/spring-cloud-openfeign
-[Spring Cloud Sleuth]: https://spring.io/projects/spring-cloud-sleuth
+[Spring Feign]: https://spring.io/projects/spring-cloud-openfeign
+[Spring Sleuth]: https://spring.io/projects/spring-cloud-sleuth
