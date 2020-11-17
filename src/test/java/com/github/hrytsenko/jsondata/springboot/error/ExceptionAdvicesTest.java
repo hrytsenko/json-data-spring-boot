@@ -109,6 +109,18 @@ class ExceptionAdvicesTest {
     }
 
     @Test
+    void serviceExceptionAdvice_onServiceUnavailable() {
+        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+
+        ServiceException.ServiceUnavailable sourceException = new ServiceException.ServiceUnavailable();
+
+        ExceptionAdvices.ErrorResponse actualResponse = advice.onServiceUnavailable(sourceException);
+
+        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("SERVICE_UNAVAILABLE", CORRELATION);
+        Assertions.assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
     void validateExceptionAdvice_onProcessJson() {
         ExceptionAdvices.ValidateExceptionAdvice advice = new ExceptionAdvices.ValidateExceptionAdvice(correlationSource);
 

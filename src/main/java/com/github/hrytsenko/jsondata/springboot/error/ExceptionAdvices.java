@@ -98,6 +98,13 @@ class ExceptionAdvices {
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
+        @ExceptionHandler(ServiceException.ServiceUnavailable.class)
+        @ResponseStatus(code = HttpStatus.SERVICE_UNAVAILABLE)
+        public ErrorResponse onServiceUnavailable(ServiceException.ServiceUnavailable exception) {
+            log.error("Service unavailable", exception);
+            return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
+        }
+
     }
 
     @RestControllerAdvice

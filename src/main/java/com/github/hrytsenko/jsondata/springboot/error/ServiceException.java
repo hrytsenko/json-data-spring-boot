@@ -93,4 +93,16 @@ public class ServiceException extends RuntimeException {
 
     }
 
+    public static class ServiceUnavailable extends ServiceException {
+
+        public ServiceUnavailable() {
+            this(null);
+        }
+
+        public ServiceUnavailable(Throwable cause) {
+            super("SERVICE_UNAVAILABLE", cause);
+        }
+
+    }
+
 }
