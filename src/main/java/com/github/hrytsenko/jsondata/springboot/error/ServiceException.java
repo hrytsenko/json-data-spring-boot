@@ -45,7 +45,7 @@ public class ServiceException extends RuntimeException {
 
     }
 
-    public static class Unauthorized extends BadRequest {
+    public static class Unauthorized extends ServiceException {
 
         public Unauthorized() {
             this(null);
@@ -57,7 +57,7 @@ public class ServiceException extends RuntimeException {
 
     }
 
-    public static class Forbidden extends BadRequest {
+    public static class Forbidden extends ServiceException {
 
         public Forbidden() {
             this(null);
@@ -69,7 +69,7 @@ public class ServiceException extends RuntimeException {
 
     }
 
-    public static class NotFound extends BadRequest {
+    public static class NotFound extends ServiceException {
 
         public NotFound() {
             this(null);
