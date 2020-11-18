@@ -46,7 +46,7 @@
 
         <spring.version>2.3.0.RELEASE</spring.version>
 
-        <json-data.version>0.1.0-beta</json-data.version>
+        <json-data.version>0.2.0-beta</json-data.version>
 
         <lombock.version>1.18.12</lombock.version>
         <junit.version>5.6.2</junit.version>
