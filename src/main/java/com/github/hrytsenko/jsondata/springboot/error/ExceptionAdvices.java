@@ -85,7 +85,7 @@ class ExceptionAdvices {
         }
 
         @ExceptionHandler(ServiceException.NotFound.class)
-        @ResponseStatus(code = HttpStatus.FORBIDDEN)
+        @ResponseStatus(code = HttpStatus.NOT_FOUND)
         public ErrorResponse onNotFound(ServiceException.NotFound exception) {
             log.error("Not found", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
