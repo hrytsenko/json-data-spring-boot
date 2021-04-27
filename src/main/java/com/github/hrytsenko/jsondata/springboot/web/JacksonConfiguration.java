@@ -53,7 +53,7 @@ class JacksonConfiguration {
     @AllArgsConstructor
     static class JsonEntityDeserializer extends JsonDeserializer<JsonEntity<?>> {
 
-        private Class<?> entityClass;
+        Class<?> entityClass;
 
         @SneakyThrows
         @Override

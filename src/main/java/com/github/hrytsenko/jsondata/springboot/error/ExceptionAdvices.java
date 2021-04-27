@@ -20,7 +20,6 @@ import com.github.hrytsenko.jsondata.JsonEntity;
 import com.github.hrytsenko.jsondata.springboot.web.ValidateRequestException;
 import com.github.hrytsenko.jsondata.springboot.web.ValidateResponseException;
 import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -39,7 +38,6 @@ class ExceptionAdvices {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Slf4j
     @AllArgsConstructor
-    @FieldDefaults(makeFinal = true)
     static class InternalExceptionAdvice {
 
         CorrelationSource correlationSource;
@@ -58,7 +56,6 @@ class ExceptionAdvices {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Slf4j
     @AllArgsConstructor
-    @FieldDefaults(makeFinal = true)
     static class ServiceExceptionAdvice {
 
         CorrelationSource correlationSource;
@@ -112,7 +109,6 @@ class ExceptionAdvices {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Slf4j
     @AllArgsConstructor
-    @FieldDefaults(makeFinal = true)
     static class ValidateExceptionAdvice {
 
         CorrelationSource correlationSource;

@@ -16,9 +16,7 @@
 package com.github.hrytsenko.jsondata.springboot.error;
 
 import lombok.Getter;
-import lombok.experimental.FieldDefaults;
 
-@FieldDefaults(makeFinal = true)
 public class ServiceException extends RuntimeException {
 
     @Getter
