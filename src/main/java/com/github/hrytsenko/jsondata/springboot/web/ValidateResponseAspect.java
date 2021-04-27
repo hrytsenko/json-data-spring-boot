@@ -35,7 +35,7 @@ class ValidateResponseAspect {
 
     @Around("@annotation(config)")
     @SneakyThrows
-    public Object handle(ProceedingJoinPoint point, ValidateResponse config) {
+    Object handle(ProceedingJoinPoint point, ValidateResponse config) {
         JsonEntity<?> target = (JsonEntity<?>) point.proceed();
 
         String schemaName = config.value();
@@ -48,4 +48,5 @@ class ValidateResponseAspect {
 
         return target;
     }
+
 }

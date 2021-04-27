@@ -27,7 +27,7 @@ class WrapErrorsAspect {
 
     @Around("@annotation(config)")
     @SneakyThrows
-    public Object handle(ProceedingJoinPoint point, WrapErrors config) {
+    Object handle(ProceedingJoinPoint point, WrapErrors config) {
         try {
             return point.proceed();
         } catch (ServiceException exception) {

@@ -44,7 +44,7 @@ class ExceptionAdvices {
 
         @ExceptionHandler(Exception.class)
         @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-        public ErrorResponse onInternalError(Exception exception) {
+        ErrorResponse onInternalError(Exception exception) {
             log.error("Unexpected error", exception);
             return ErrorResponse.create("INTERNAL_ERROR", correlationSource.getCorrelation());
         }
@@ -62,42 +62,42 @@ class ExceptionAdvices {
 
         @ExceptionHandler(ServiceException.BadRequest.class)
         @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-        public ErrorResponse onBadRequest(ServiceException.BadRequest exception) {
+        ErrorResponse onBadRequest(ServiceException.BadRequest exception) {
             log.error("Bad request", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ServiceException.Unauthorized.class)
         @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-        public ErrorResponse onUnauthorized(ServiceException.Unauthorized exception) {
+        ErrorResponse onUnauthorized(ServiceException.Unauthorized exception) {
             log.error("Unauthorized", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ServiceException.Forbidden.class)
         @ResponseStatus(code = HttpStatus.FORBIDDEN)
-        public ErrorResponse onForbidden(ServiceException.Forbidden exception) {
+        ErrorResponse onForbidden(ServiceException.Forbidden exception) {
             log.error("Forbidden", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ServiceException.NotFound.class)
         @ResponseStatus(code = HttpStatus.NOT_FOUND)
-        public ErrorResponse onNotFound(ServiceException.NotFound exception) {
+        ErrorResponse onNotFound(ServiceException.NotFound exception) {
             log.error("Not found", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ServiceException.InternalError.class)
         @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-        public ErrorResponse onInternalError(ServiceException.InternalError exception) {
+        ErrorResponse onInternalError(ServiceException.InternalError exception) {
             log.error("Internal error", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ServiceException.ServiceUnavailable.class)
         @ResponseStatus(code = HttpStatus.SERVICE_UNAVAILABLE)
-        public ErrorResponse onServiceUnavailable(ServiceException.ServiceUnavailable exception) {
+        ErrorResponse onServiceUnavailable(ServiceException.ServiceUnavailable exception) {
             log.error("Service unavailable", exception);
             return ErrorResponse.create(exception.getCode(), correlationSource.getCorrelation());
         }
@@ -115,21 +115,21 @@ class ExceptionAdvices {
 
         @ExceptionHandler(JsonProcessingException.class)
         @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public ErrorResponse onProcessJson(JsonProcessingException exception) {
+        ErrorResponse onProcessJson(JsonProcessingException exception) {
             log.error("JSON processing failed", exception);
             return ErrorResponse.create("BAD_CONTENT", correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ValidateRequestException.class)
         @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public ErrorResponse onValidateRequest(ValidateRequestException exception) {
+        ErrorResponse onValidateRequest(ValidateRequestException exception) {
             log.error("Request validation failed", exception);
             return ErrorResponse.create("INVALID_REQUEST", correlationSource.getCorrelation());
         }
 
         @ExceptionHandler(ValidateResponseException.class)
         @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-        public ErrorResponse onValidateResponse(ValidateResponseException exception) {
+        ErrorResponse onValidateResponse(ValidateResponseException exception) {
             log.error("Response validation failed", exception);
             return ErrorResponse.create("INVALID_RESPONSE", correlationSource.getCorrelation());
         }

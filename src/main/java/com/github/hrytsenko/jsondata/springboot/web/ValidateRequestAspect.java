@@ -33,7 +33,7 @@ class ValidateRequestAspect {
     ValidatorSource validatorSource;
 
     @Before("@annotation(config)")
-    public void handle(JoinPoint point, ValidateRequest config) {
+    void handle(JoinPoint point, ValidateRequest config) {
         JsonEntity<?> target = (JsonEntity<?>) point.getArgs()[0];
 
         String schemaName = config.value();
