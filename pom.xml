@@ -44,13 +44,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.version>2.3.0.RELEASE</spring.version>
+        <spring.version>2.4.5</spring.version>
 
-        <json-data.version>0.2.0-beta</json-data.version>
+        <json-data.version>0.2.0</json-data.version>
 
-        <lombock.version>1.18.12</lombock.version>
-        <junit.version>5.6.2</junit.version>
-        <mockito.version>3.3.3</mockito.version>
+        <lombock.version>1.18.20</lombock.version>
+        <junit.version>5.7.1</junit.version>
+        <mockito.version>3.9.0</mockito.version>
     </properties>
 
     <dependencyManagement>
@@ -180,7 +180,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.5</version>
+                        <version>0.8.6</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
