@@ -17,9 +17,9 @@ package com.github.hrytsenko.jsondata.springboot.error;
 
 import lombok.Getter;
 
+@Getter
 public class ServiceException extends RuntimeException {
 
-    @Getter
     String code;
 
     private ServiceException(String code) {
@@ -34,7 +34,7 @@ public class ServiceException extends RuntimeException {
     public static class BadRequest extends ServiceException {
 
         public BadRequest(String code) {
-            super(code);
+            this(code, null);
         }
 
         public BadRequest(String code, Throwable cause) {
@@ -82,7 +82,7 @@ public class ServiceException extends RuntimeException {
     public static class InternalError extends ServiceException {
 
         public InternalError(String code) {
-            super(code);
+            this(code, null);
         }
 
         public InternalError(String code, Throwable cause) {

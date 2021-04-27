@@ -46,7 +46,7 @@ class JacksonConfigurationTest {
 
         Map<String, ?> expectedObject = stringToMap("{'foo':'FOO'}");
         Mockito.verify(sourceGenerator)
-                .writeObject(Mockito.eq(expectedObject));
+                .writeObject(expectedObject);
     }
 
     @Test
