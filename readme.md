@@ -2,89 +2,76 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hrytsenko_json-data-spring-boot&metric=alert_status)](https://sonarcloud.io/dashboard?id=hrytsenko_json-data-spring-boot)
 [![](https://jitpack.io/v/hrytsenko/json-data-spring-boot.svg)](https://jitpack.io/#hrytsenko/json-data-spring-boot)
 
-# Summary
+# JSON data for Spring Boot
 
-This library enables [json-data] for [Spring Boot] including serialization, validation and error handling for HTTP requests and responses that use JSON entities.
-
-# Example
-
-The following example illustrates:
-* Use of JSON entities with [Spring Boot].
-* Use of JSON entities with [Spring Feign].
-* Use of JSON errors with [Spring Boot] and [Spring Sleuth].
+This library enables [json-data] for [Spring Boot] including serialization, validation and error handling.
+The following example illustrates integration with [Spring Boot], [Spring Feign] and [Spring Sleuth]:
 
 ```java
 @EnableFeignClients
 @SpringBootApplication
 class Application {
 
-    static class Request extends JsonEntity<Request> {
-        String getOwner() {
-            return getString("owner");
-        }
+  static class Request extends JsonEntity<Request> {
+    String getOwner() {
+      return getString("owner");
+    }
+  }
+
+  static class Response extends JsonEntity<Response> {
+  }
+
+  @RestController
+  @AllArgsConstructor
+  static class GithubController {
+
+    static JsonMapper<Response> TO_RESPONSE = JsonMapper.create(
+        JsonResources.readResource("/response-projection.json"), Response::new);
+
+    GithubClient githubClient;
+
+    @PostMapping(
+        value = "/list-repositories",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ValidateRequest("/request-schema.json")
+    @ValidateResponse("/response-schema.json")
+    @WrapErrors("CANNOT_LIST_REPOSITORIES")
+    public Response listRepositories(@RequestBody Request request) {
+      var repositories = githubClient.listRepositories(request.getOwner());
+      return TO_RESPONSE.map(repositories);
     }
 
-    static class Response extends JsonEntity<Response> {
+    @FeignClient(name = "github-client", url = "${github.url}")
+    interface GithubClient {
+      @GetMapping(
+          value = "/users/{owner}/repos",
+          produces = MediaType.APPLICATION_JSON_VALUE)
+      List<JsonBean> listRepositories(@PathVariable("owner") String owner);
     }
 
-    @RestController
-    @AllArgsConstructor
-    static class GithubController {
+  }
 
-        static JsonMapper<Response> TO_RESPONSE = JsonMapper.create(
-                JsonResources.readResource("/response-projection.json"), Response::new);
+  @Bean
+  CorrelationSource sleuthSource(Tracer tracer) {
+    return () -> tracer.currentSpan().context().traceId();
+  }
 
-        GithubClient githubClient;
-
-        @PostMapping(
-                value = "/list-repositories",
-                consumes = MediaType.APPLICATION_JSON_VALUE,
-                produces = MediaType.APPLICATION_JSON_VALUE)
-        @ValidateRequest("/request-schema.json")
-        @ValidateResponse("/response-schema.json")
-        @WrapErrors("CANNOT_LIST_REPOSITORIES")
-        public Response listRepositories(@RequestBody Request request) {
-            val repositories = githubClient.listRepositories(request.getOwner());
-            return TO_RESPONSE.map(repositories);
-        }
-
-        @FeignClient(
-                name = "github-client",
-                url = "${github.url}")
-        interface GithubClient {
-            @GetMapping(
-                    value = "/users/{owner}/repos",
-                    produces = MediaType.APPLICATION_JSON_VALUE)
-            List<JsonBean> listRepositories(@PathVariable("owner") String owner);
-        }
-
-    }
-
-    @Bean
-    public CorrelationSource sleuthSource(Tracer tracer) {
-        return () -> tracer.currentSpan().context().traceIdString();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
 
 }
 ```
 
-# Usage
-
-Use JSON entities with Spring Web and Spring Feign.
-
-Use `ValidateRequest` to validate a JSON entity (the first argument) via JSON Schema. Use `ValidateResponse` to validate a JSON entity (the return value) via JSON Schema.
-
-Use `WrapErrors` to wrap all exceptions in `ServiceException.InternalError` with a given error code, except those that are `ServiceException`.
-
-Provide `CorrelationSource` to enable correlations for error responses.
-
+Use `ValidateRequest` to validate an input JSON entity (the first argument).
+Use `ValidateResponse` to validate an output JSON entity (the return value).
 Provide `ValidatorSource` to configure a resource manager for validators.
 
-[json-data]: https://github.com/hrytsenko/json-data 
+Use `WrapErrors` to wrap all unhandled exceptions into `ServiceException.InternalError`.
+Provide `CorrelationSource` to enable correlations for error responses.
+
+[json-data]: https://github.com/hrytsenko/json-data
 [Spring Boot]: https://spring.io/projects/spring-boot
 [Spring Feign]: https://spring.io/projects/spring-cloud-openfeign
 [Spring Sleuth]: https://spring.io/projects/spring-cloud-sleuth
