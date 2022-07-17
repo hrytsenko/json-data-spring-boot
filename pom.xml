@@ -5,7 +5,7 @@
 
     <groupId>com.github.hrytsenko</groupId>
     <artifactId>json-data-spring-boot</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 
     <url>https://github.com/hrytsenko/json-data-spring-boot</url>
     <inceptionYear>2020</inceptionYear>
@@ -43,10 +43,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
         <spring.version>2.4.5</spring.version>
 
-        <json-data.version>0.2.0</json-data.version>
+        <json-data.version>0.2.1</json-data.version>
 
         <lombock.version>1.18.20</lombock.version>
         <junit.version>5.7.1</junit.version>
@@ -147,9 +149,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-                <configuration>
-                    <release>11</release>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
