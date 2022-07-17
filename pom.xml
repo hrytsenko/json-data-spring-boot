@@ -46,13 +46,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <spring.version>2.4.5</spring.version>
+        <spring.version>2.4.13</spring.version>
 
         <json-data.version>0.2.1</json-data.version>
 
-        <lombock.version>1.18.20</lombock.version>
-        <junit.version>5.7.1</junit.version>
-        <mockito.version>3.9.0</mockito.version>
+        <lombock.version>1.18.24</lombock.version>
+        <junit.version>5.8.2</junit.version>
+        <mockito.version>4.6.1</mockito.version>
     </properties>
 
     <dependencyManagement>
@@ -148,7 +148,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -179,7 +179,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.6</version>
+                        <version>0.8.8</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
