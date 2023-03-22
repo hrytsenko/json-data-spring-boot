@@ -20,11 +20,11 @@ import com.github.hrytsenko.jsondata.springboot.web.ValidatorSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class AutoConfigurationTest {
+class JsonDataAutoConfigurationTest {
 
     @Test
     void correlationSource_undefined() {
-        CorrelationSource correlationSource = new AutoConfiguration().undefinedCorrelationSource();
+        CorrelationSource correlationSource = new JsonDataAutoConfiguration().undefinedCorrelationSource();
 
         String actualCorrelation = correlationSource.getCorrelation();
 
@@ -33,7 +33,7 @@ class AutoConfigurationTest {
 
     @Test
     void validatorSource_default() {
-        ValidatorSource validatorSource = new AutoConfiguration().defaultValidatorSource();
+        ValidatorSource validatorSource = new JsonDataAutoConfiguration().defaultValidatorSource();
 
         Assertions.assertDoesNotThrow(
                 () -> validatorSource.getValidator("empty-schema.json"));

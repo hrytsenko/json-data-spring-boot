@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.hrytsenko.jsondata.springboot.AutoConfiguration

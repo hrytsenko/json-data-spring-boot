@@ -20,15 +20,15 @@ import com.github.hrytsenko.jsondata.JsonValidator;
 import com.github.hrytsenko.jsondata.springboot.error.CorrelationSource;
 import com.github.hrytsenko.jsondata.springboot.web.ValidatorSource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan(basePackageClasses = AutoConfiguration.class)
 @Slf4j
-class AutoConfiguration {
+@AutoConfiguration
+@ComponentScan(basePackageClasses = JsonDataAutoConfiguration.class)
+class JsonDataAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
