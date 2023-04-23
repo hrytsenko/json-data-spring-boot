@@ -18,6 +18,7 @@ package com.github.hrytsenko.jsondata.springboot.web;
 import com.github.hrytsenko.jsondata.JsonBean;
 import com.github.hrytsenko.jsondata.JsonParser;
 import com.github.hrytsenko.jsondata.JsonValidator;
+import com.github.hrytsenko.jsondata.springboot.error.ServiceException;
 import lombok.SneakyThrows;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Assertions;
@@ -64,7 +65,7 @@ class ValidateResponseAspectTest {
         Mockito.doReturn(sourceValidator)
                 .when(validatorSource).getValidator(Mockito.any());
 
-        Assertions.assertThrows(ValidateResponseException.class,
+        Assertions.assertThrows(ServiceException.InternalError.class,
                 () -> aspect.handle(sourcePoint, sourceConfig));
     }
 

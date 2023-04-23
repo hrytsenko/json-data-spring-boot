@@ -17,15 +17,14 @@ package com.github.hrytsenko.jsondata.springboot.web;
 
 import com.github.hrytsenko.jsondata.JsonEntity;
 import com.github.hrytsenko.jsondata.JsonValidatorException;
+import com.github.hrytsenko.jsondata.springboot.error.ServiceException;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
 @Aspect
-@Order(0)
 @Configuration
 @AllArgsConstructor
 class ValidateRequestAspect {
@@ -41,7 +40,7 @@ class ValidateRequestAspect {
             validatorSource.getValidator(schemaName)
                     .validate(target);
         } catch (JsonValidatorException exception) {
-            throw new ValidateRequestException("Invalid request " + schemaName, exception);
+            throw new ServiceException.BadRequest("INVALID_REQUEST", exception);
         }
     }
 

@@ -15,145 +15,97 @@
  */
 package com.github.hrytsenko.jsondata.springboot.error;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.hrytsenko.jsondata.springboot.web.ValidateRequestException;
-import com.github.hrytsenko.jsondata.springboot.web.ValidateResponseException;
+import com.github.hrytsenko.jsondata.JsonBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 class ExceptionAdvicesTest {
 
     private static final String CORRELATION = "CORRELATION";
 
-    CorrelationSource correlationSource;
+    ExceptionAdvice exceptionAdvice;
 
     @BeforeEach
     void init() {
-        correlationSource = Mockito.mock(CorrelationSource.class);
+        CorrelationSource correlationSource = Mockito.mock(CorrelationSource.class);
         Mockito.doReturn(CORRELATION)
                 .when(correlationSource).getCorrelation();
+        exceptionAdvice = new ExceptionAdvice(correlationSource);
     }
 
     @Test
-    void internalExceptionAdvice_onInternalError() {
-        ExceptionAdvices.InternalExceptionAdvice advice = new ExceptionAdvices.InternalExceptionAdvice(correlationSource);
+    void onUnknownError() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onUnexpectedError(
+                Mockito.mock(Exception.class));
 
-        Exception sourceException = Mockito.mock(Exception.class);
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onInternalError(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("INTERNAL_ERROR", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", actualResponse);
     }
 
     @Test
-    void serviceExceptionAdvice_onBadRequest() {
-        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+    void onBadRequest() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onBadRequest(
+                new ServiceException.BadRequest("BAD_REQUEST"));
 
-        ServiceException.BadRequest sourceException = new ServiceException.BadRequest("BAD_REQUEST");
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onBadRequest(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("BAD_REQUEST", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.BAD_REQUEST, "BAD_REQUEST", actualResponse);
     }
 
     @Test
-    void serviceExceptionAdvice_onUnauthorized() {
-        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+    void onUnauthorized() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onUnauthorized(
+                new ServiceException.Unauthorized());
 
-        ServiceException.Unauthorized sourceException = new ServiceException.Unauthorized();
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onUnauthorized(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("UNAUTHORIZED", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", actualResponse);
     }
 
     @Test
-    void serviceExceptionAdvice_onForbidden() {
-        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+    void onForbidden() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onForbidden(
+                new ServiceException.Forbidden());
 
-        ServiceException.Forbidden sourceException = new ServiceException.Forbidden();
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onForbidden(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("FORBIDDEN", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.FORBIDDEN, "FORBIDDEN", actualResponse);
     }
 
     @Test
-    void serviceExceptionAdvice_onNotFound() {
-        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+    void onNotFound() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onNotFound(
+                new ServiceException.NotFound());
 
-        ServiceException.NotFound sourceException = new ServiceException.NotFound();
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onNotFound(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("NOT_FOUND", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.NOT_FOUND, "NOT_FOUND", actualResponse);
     }
 
     @Test
-    void serviceExceptionAdvice_onInternalError() {
-        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+    void onInternalError() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onInternalError(
+                new ServiceException.InternalError("INTERNAL_ERROR"));
 
-        ServiceException.InternalError sourceException = new ServiceException.InternalError("INTERNAL_ERROR");
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onInternalError(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("INTERNAL_ERROR", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", actualResponse);
     }
 
     @Test
-    void serviceExceptionAdvice_onServiceUnavailable() {
-        ExceptionAdvices.ServiceExceptionAdvice advice = new ExceptionAdvices.ServiceExceptionAdvice(correlationSource);
+    void onServiceUnavailable() {
+        ResponseEntity<?> actualResponse = exceptionAdvice.onServiceUnavailable(
+                new ServiceException.ServiceUnavailable());
 
-        ServiceException.ServiceUnavailable sourceException = new ServiceException.ServiceUnavailable();
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onServiceUnavailable(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("SERVICE_UNAVAILABLE", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        assertResponse(HttpStatus.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", actualResponse);
     }
 
-    @Test
-    void validateExceptionAdvice_onProcessJson() {
-        ExceptionAdvices.ValidateExceptionAdvice advice = new ExceptionAdvices.ValidateExceptionAdvice(correlationSource);
+    static void assertResponse(HttpStatus expectedStatus, String expectedCode, ResponseEntity<?> actualResponse) {
+        HttpStatus actualStatus = actualResponse.getStatusCode();
+        Assertions.assertEquals(expectedStatus, actualStatus);
+        MediaType actualContentType = actualResponse.getHeaders().getContentType();
+        Assertions.assertEquals(MediaType.APPLICATION_JSON, actualContentType);
 
-        JsonProcessingException sourceException = Mockito.mock(JsonProcessingException.class);
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onProcessJson(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("BAD_CONTENT", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
-    }
-
-    @Test
-    void validateExceptionAdvice_onValidateRequest() {
-        ExceptionAdvices.ValidateExceptionAdvice advice = new ExceptionAdvices.ValidateExceptionAdvice(correlationSource);
-
-        ValidateRequestException sourceException = Mockito.mock(ValidateRequestException.class);
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onValidateRequest(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("INVALID_REQUEST", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
-    }
-
-    @Test
-    void validateExceptionAdvice_onValidateResponse() {
-        ExceptionAdvices.ValidateExceptionAdvice advice = new ExceptionAdvices.ValidateExceptionAdvice(correlationSource);
-
-        ValidateResponseException sourceException = Mockito.mock(ValidateResponseException.class);
-
-        ExceptionAdvices.ErrorResponse actualResponse = advice.onValidateResponse(sourceException);
-
-        ExceptionAdvices.ErrorResponse expectedResponse = ExceptionAdvices.ErrorResponse.create("INVALID_RESPONSE", CORRELATION);
-        Assertions.assertEquals(expectedResponse, actualResponse);
+        JsonBean actualBody = (JsonBean) actualResponse.getBody();
+        Assertions.assertNotNull(actualBody);
+        String actualCorrelation = actualBody.getString("error.correlation");
+        Assertions.assertEquals(CORRELATION, actualCorrelation);
+        String actualCode = actualBody.getString("error.code");
+        Assertions.assertEquals(expectedCode, actualCode);
     }
 
 }
