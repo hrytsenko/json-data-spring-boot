@@ -37,7 +37,6 @@ class ValidateResponseAspect {
     Object handle(ProceedingJoinPoint point, ValidateResponse config) {
         JsonEntity<?> target = (JsonEntity<?>) point.proceed();
 
-        String schemaName = config.value();
         try {
             validatorSource.getValidator(config.value())
                     .validate(target);

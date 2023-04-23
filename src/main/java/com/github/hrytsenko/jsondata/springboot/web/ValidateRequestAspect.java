@@ -35,9 +35,8 @@ class ValidateRequestAspect {
     void handle(JoinPoint point, ValidateRequest config) {
         JsonEntity<?> target = (JsonEntity<?>) point.getArgs()[0];
 
-        String schemaName = config.value();
         try {
-            validatorSource.getValidator(schemaName)
+            validatorSource.getValidator(config.value())
                     .validate(target);
         } catch (JsonValidatorException exception) {
             throw new ServiceException.BadRequest("INVALID_REQUEST", exception);
