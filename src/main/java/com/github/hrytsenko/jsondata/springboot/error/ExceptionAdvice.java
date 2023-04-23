@@ -34,48 +34,48 @@ class ExceptionAdvice {
     CorrelationSource correlationSource;
 
     @ExceptionHandler(Exception.class)
-    ResponseEntity<?> onUnexpectedError(Exception exception) {
+    ResponseEntity<JsonBean> onUnexpectedError(Exception exception) {
         log.error("Unexpected error", exception);
         return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
     }
 
     @ExceptionHandler(ServiceException.BadRequest.class)
-    ResponseEntity<?> onBadRequest(ServiceException.BadRequest exception) {
+    ResponseEntity<JsonBean> onBadRequest(ServiceException.BadRequest exception) {
         log.error("Bad request", exception);
         return errorResponse(HttpStatus.BAD_REQUEST, exception.getCode());
     }
 
     @ExceptionHandler(ServiceException.Unauthorized.class)
-    ResponseEntity<?> onUnauthorized(ServiceException.Unauthorized exception) {
+    ResponseEntity<JsonBean> onUnauthorized(ServiceException.Unauthorized exception) {
         log.error("Unauthorized", exception);
         return errorResponse(HttpStatus.UNAUTHORIZED, exception.getCode());
     }
 
     @ExceptionHandler(ServiceException.Forbidden.class)
-    ResponseEntity<?> onForbidden(ServiceException.Forbidden exception) {
+    ResponseEntity<JsonBean> onForbidden(ServiceException.Forbidden exception) {
         log.error("Forbidden", exception);
         return errorResponse(HttpStatus.FORBIDDEN, exception.getCode());
     }
 
     @ExceptionHandler(ServiceException.NotFound.class)
-    ResponseEntity<?> onNotFound(ServiceException.NotFound exception) {
+    ResponseEntity<JsonBean> onNotFound(ServiceException.NotFound exception) {
         log.error("Not found", exception);
         return errorResponse(HttpStatus.NOT_FOUND, exception.getCode());
     }
 
     @ExceptionHandler(ServiceException.InternalError.class)
-    ResponseEntity<?> onInternalError(ServiceException.InternalError exception) {
+    ResponseEntity<JsonBean> onInternalError(ServiceException.InternalError exception) {
         log.error("Internal error", exception);
         return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception.getCode());
     }
 
     @ExceptionHandler(ServiceException.ServiceUnavailable.class)
-    ResponseEntity<?> onServiceUnavailable(ServiceException.ServiceUnavailable exception) {
+    ResponseEntity<JsonBean> onServiceUnavailable(ServiceException.ServiceUnavailable exception) {
         log.error("Service unavailable", exception);
         return errorResponse(HttpStatus.SERVICE_UNAVAILABLE, exception.getCode());
     }
 
-    private ResponseEntity<?> errorResponse(HttpStatus status, String code) {
+    private ResponseEntity<JsonBean> errorResponse(HttpStatus status, String code) {
         return ResponseEntity.status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new JsonBean()
