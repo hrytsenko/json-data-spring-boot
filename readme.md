@@ -1,10 +1,10 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hrytsenko_json-data-spring-boot&metric=alert_status)](https://sonarcloud.io/dashboard?id=hrytsenko_json-data-spring-boot)
 [![](https://jitpack.io/v/hrytsenko/json-data-spring-boot.svg)](https://jitpack.io/#hrytsenko/json-data-spring-boot)
 
-# JSON data for Spring Boot
+# JSON Data for Spring Boot
 
 This library enables [json-data] for [Spring Boot] including serialization, validation and error handling.
-The following example illustrates integration with [Spring Boot], [Spring Feign] and [Spring Sleuth]:
+The following example illustrates integration with [Spring Boot], [Spring Feign] and [Spring Sleuth].
 
 ```java
 @EnableFeignClients
@@ -63,11 +63,11 @@ class Application {
 }
 ```
 
-Use `ValidateRequest` to validate an input JSON entity (the first argument).
-Use `ValidateResponse` to validate an output JSON entity (the return value).
+Use `ValidateRequest` to validate inbound JSON entities.
+Use `ValidateResponse` to validate outbound JSON entities.
 Provide `ValidatorSource` to configure a resource manager for validators.
 
-Use `WrapErrors` to wrap all unhandled exceptions into `ServiceException.InternalError`.
+Use `WrapErrors` to wrap all unhandled exceptions into `ServiceException`.
 Provide `CorrelationSource` to enable correlations for error responses.
 
 [json-data]: https://github.com/hrytsenko/json-data
